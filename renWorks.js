@@ -17,7 +17,7 @@ export let renWorks = {
    *
    * @param {HTMLElement|Document} parent
    * @param {string} selector
-   * @returns {HTMLElement}
+   * @returns {HTMLElement[]}
    */
   qa(parent, selector) {
     return parent.querySelectorAll(selector);
@@ -49,6 +49,24 @@ export let renWorks = {
       throw new Error("No such object found.");
     }
     return desired;
+  },
+  /**
+   *
+   * @param {string} string
+   * @param {string} X
+   * @returns {void}
+   */
+  mutRemoveXFromString(string, X) {
+    string = string.replaceAll(X, "");
+  },
+  /**
+  *
+  * @param {string} string
+  * @param {string} X
+  @returns {string}
+  */
+  RemoveXFromString(string, X) {
+    return string.replaceAll(X, "");
   },
 };
 function styleOneElement(style, className, newStyle) {
