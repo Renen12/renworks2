@@ -51,6 +51,19 @@ export let renWorks = {
     return desired;
   },
 };
+function styleOneElement(style, className, newStyle) {
+  let styleText = `.${className} {${style}}`;
+  let duplicate = false;
+  renWorks.enumerate(renWorks.qa(document.body, "style"), (styleElement) => {
+    if (styleElement.innerHTML === styleText) {
+      duplicate = true;
+    }
+  });
+  newStyle.innerHTML = styleText;
+  if (!duplicate) {
+    document.body.appendChild(newStyle);
+  }
+}
 // Run styling on all elements
 function styleDocument() {
   let allElements = renWorks.qa(document, "*");
@@ -65,20 +78,24 @@ function styleDocument() {
           if (element.className === "") {
             throw new Error(`The div ${element.outerHTML} needs a class name.`);
           }
-          let styleText = `.${element.className} { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);}`;
-          let duplicate = false;
-          renWorks.enumerate(
-            renWorks.qa(document.body, "style"),
-            (styleElement) => {
-              if (styleElement.innerHTML === styleText) {
-                duplicate = true;
-              }
-            },
+          styleOneElement(
+            "position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);",
+            element.className,
+            newStyle,
           );
-          newStyle.innerHTML = styleText;
-          if (!duplicate) {
-            document.body.appendChild(newStyle);
+          break;
+        case "div-centered-flex":
+          if (element.className === "") {
+            throw new Error(`The div ${element.outerHTML} needs a class name.`);
           }
+          styleOneElement(
+            `display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;`,
+            element.className,
+            document.createElement("style"),
+          );
           break;
       }
     });
