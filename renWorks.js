@@ -52,6 +52,24 @@ export let renWorks = {
   },
   /**
    *
+   * @param {string} type
+   */
+  createNewElementWithAttributes(type, attributes, optionalTextContent) {
+    let element = document.createElement(type);
+    if (optionalTextContent != null) {
+      element.innerText = optionalTextContent;
+    }
+    for (let i = 0; i < Object.keys(attributes).length; i++) {
+      element.setAttribute(
+        Object.keys(attributes)[i],
+        Object.values(attributes)[i],
+      );
+    }
+    loadStyleMacros();
+    return element;
+  },
+  /**
+   *
    * @param {string} string
    * @param {string} X
    * @returns {void}
@@ -68,7 +86,32 @@ export let renWorks = {
   RemoveXFromString(string, X) {
     return string.replaceAll(X, "");
   },
+  /**
+   *
+   * @param {Array<number>} array
+   */
+  sorted(array) {
+    array.sort((a, b) => {
+      return a - b;
+    });
+    return array;
+  },
 };
+// Tests if the supplied value is not valid, e.g null. If that is the case, runs the fn() function that was supplied.
+// Returns success value
+/**
+ *
+ * @param {any} v
+ * @param {Function} fn
+ * @returns {boolean}
+ */
+export function test(v, fn) {
+  if (v === null || v === undefined || isNaN(v)) {
+    fn();
+    return false;
+  }
+  return true;
+}
 function styleOneElement(style, className, newStyle) {
   let styleText = `.${className} {${style}}`;
   let duplicate = false;
