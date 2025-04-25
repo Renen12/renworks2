@@ -98,19 +98,19 @@ export let renWorks = {
   },
 };
 // Tests if the supplied value is not valid, e.g null. If that is the case, runs the fn() function that was supplied.
-// Returns success value
+// Returns [v, successValue]
 /**
  *
  * @param {any} v
  * @param {Function} fn
- * @returns {boolean}
+ * @returns {Array<any>}
  */
 export function test(v, fn) {
   if (v === null || v === undefined || isNaN(v)) {
     fn();
-    return false;
+    return [v, false];
   }
-  return true;
+  return [v, true];
 }
 function styleOneElement(style, className, newStyle) {
   let styleText = `.${className} {${style}}`;
