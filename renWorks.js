@@ -51,6 +51,7 @@ export let renWorks = {
       } else {
         fn(defaultAnswer);
       }
+      dialogue.close();
     }
     confirmBtn.onclick = () => {
       runFn();
