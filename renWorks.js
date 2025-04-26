@@ -23,6 +23,50 @@ export let renWorks = {
     return parent.querySelectorAll(selector);
   },
   /**
+   * @param {(answer: string) => {}} fn
+   * @param {string} msg
+   * @param {string} defaultAnswer
+   */
+  beseech(msg, fn, defaultAnswer) {
+    let dialogue = this.createNewElementWithAttributes("dialog", {
+      style: "color: black;",
+    });
+    let msgElem = this.createNewElementWithAttributes(
+      "p",
+      {},
+      msg || "Please supply a valid msg value.",
+    );
+    let textinput = document.createElement("input");
+    textinput.type = "text";
+    let confirmBtn = this.createNewElementWithAttributes(
+      "button",
+      {
+        type: "button",
+      },
+      "Confirm",
+    );
+    function runFn() {
+      if (renWorks.RemoveXFromString(textinput.value, " ")) {
+        fn(textinput.value);
+      } else {
+        fn(defaultAnswer);
+      }
+    }
+    confirmBtn.onclick = () => {
+      runFn();
+    };
+    textinput.onkeydown = (event) => {
+      if (event.key === "Enter") {
+        runFn();
+      }
+    };
+    dialogue.appendChild(msgElem);
+    dialogue.appendChild(textinput);
+    dialogue.appendChild(confirmBtn);
+    document.body.appendChild(dialogue);
+    dialogue.showModal();
+  },
+  /**
    *
    * @param {any[]} collection
    * @param {(value, index) => void} fn
@@ -65,7 +109,6 @@ export let renWorks = {
         Object.values(attributes)[i],
       );
     }
-    loadStyleMacros();
     return element;
   },
   /**
