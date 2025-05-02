@@ -68,6 +68,37 @@ export let renWorks = {
     dialogue.showModal();
   },
   /**
+   * @param {(answer: string) => {}} fn
+   * @param {string[]} options
+   * @param {string} msg
+   */
+  beseechDropDown(options, msg, fn) {
+    let dialogue = document.createElement("dialog");
+    let dropdown = document.createElement("select");
+    let text = this.cnewa("p", {}, msg);
+    let btn = this.cnewa("button", {}, "Confirm");
+    btn.onclick = () => {
+      fn(dropdown.options[dropdown.selectedIndex].innerText);
+    };
+    this.enumerate(options, (option) => {
+      dropdown.appendChild(
+        this.createNewElementWithAttributes(
+          "option",
+          {
+            name: option,
+          },
+          option,
+        ),
+      );
+    });
+    dialogue.appendChild(text);
+    dialogue.appendChild(dropdown);
+    dialogue.appendChild(btn);
+    document.body.appendChild(dialogue);
+    dialogue.showModal();
+  },
+
+  /**
    *
    * @param {any[]} collection
    * @param {(value, index) => void} fn
@@ -111,6 +142,17 @@ export let renWorks = {
       );
     }
     return element;
+  },
+  // Alias for createNewElementWithAttributes()
+  /**
+   *
+   * @param {string} type
+   * @param {string} attrib
+   * @param {string} text
+   * @returns {HTMLElement}
+   */
+  cnewa(type, attrib, text) {
+    return this.createNewElementWithAttributes(type, attrib, text);
   },
   /**
    *
