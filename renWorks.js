@@ -113,6 +113,9 @@ export let renWorks = {
    * @param {(value, index) => void} fn
    */
   enumerate(collection, fn) {
+    if (collection.length === 0) {
+      console.warn("The provided collection has no elements or is invalid.");
+    }
     for (let i = 0; i < collection.length; i++) {
       fn(collection[i], i);
     }
