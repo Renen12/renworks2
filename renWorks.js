@@ -18,7 +18,7 @@ export let renWorks = {
    * @returns {HTMLElement|null}
    */
   // Can return a null-like value, unlike get()
-  unsafeGet() {
+  unsafeGet(selector) {
     return document.querySelector(selector);
   },
   /**
