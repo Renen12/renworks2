@@ -14,6 +14,14 @@ export let renWorks = {
     return element;
   },
   /**
+   * @param {string} selector
+   * @returns {HTMLElement|null}
+   */
+  // Can return a null-like value, unlike get()
+  unsafeGet() {
+    return document.querySelector(selector);
+  },
+  /**
    *
    * @param {HTMLElement|Document} parent
    * @param {string} selector
@@ -79,6 +87,7 @@ export let renWorks = {
     let btn = this.cnewa("button", {}, "Confirm");
     btn.onclick = () => {
       fn(dropdown.options[dropdown.selectedIndex].innerText);
+      dialogue.close();
     };
     this.enumerate(options, (option) => {
       dropdown.appendChild(
@@ -183,7 +192,7 @@ export let renWorks = {
     return array;
   },
 };
-// Tests if the supplied value is not valid, e.g null. If that is the case, runs the fn() function that was supplied.
+// Tests if the supplied value is not valid, e.g null. If that is the case, it will run the fn() function that was supplied.
 // Returns [v, successValue]
 /**
  *
