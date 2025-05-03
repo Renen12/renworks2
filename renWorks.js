@@ -221,10 +221,12 @@ export let renWorks = {
     let deny = this.cnewa("button", {}, denyButtonDisplay || "Deny");
     accept.onclick = () => {
       fn(true);
+      dialogue.close();
       return;
     };
     deny.onclick = () => {
       fn(false);
+      dialogue.close();
       return;
     };
     dialogue.appendChild(text);
