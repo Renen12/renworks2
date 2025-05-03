@@ -111,10 +111,13 @@ export let renWorks = {
    *
    * @param {any[]} collection
    * @param {(value, index) => void} fn
+   * @param {boolean} silence
    */
-  enumerate(collection, fn) {
-    if (collection.length === 0) {
-      console.warn("The provided collection has no elements or is invalid.");
+  enumerate(collection, fn, silence) {
+    if (!silence) {
+      if (collection.length === 0) {
+        console.warn("The provided collection has no elements or is invalid.");
+      }
     }
     for (let i = 0; i < collection.length; i++) {
       fn(collection[i], i);
@@ -128,11 +131,15 @@ export let renWorks = {
   // ["name", "test"] -> Look for property "name" with value "test"
   matchingObj(array, propertyAndDesiredValue) {
     let desired = null;
-    this.enumerate(array, (obj) => {
-      if (obj[propertyAndDesiredValue[0]] == propertyAndDesiredValue[1]) {
-        desired = obj;
-      }
-    });
+    this.enumerate(
+      array,
+      (obj) => {
+        if (obj[propertyAndDesiredValue[0]] == propertyAndDesiredValue[1]) {
+          desired = obj;
+        }
+      },
+      true,
+    );
     if (desired == null) {
       throw new Error("No such object found.");
     }
@@ -242,11 +249,15 @@ export let renWorks = {
 function styleOneElement(style, className, newStyle) {
   let styleText = `.${className} {${style}}`;
   let duplicate = false;
-  renWorks.enumerate(renWorks.qa(document.body, "style"), (styleElement) => {
-    if (styleElement.innerHTML === styleText) {
-      duplicate = true;
-    }
-  });
+  renWorks.enumerate(
+    renWorks.qa(document.body, "style"),
+    (styleElement) => {
+      if (styleElement.innerHTML === styleText) {
+        duplicate = true;
+      }
+    },
+    true,
+  );
   newStyle.innerHTML = styleText;
   if (!duplicate) {
     document.body.appendChild(newStyle);
@@ -255,39 +266,51 @@ function styleOneElement(style, className, newStyle) {
 // Run styling on all elements
 function styleDocument() {
   let allElements = renWorks.qa(document, "*");
-  renWorks.enumerate(allElements, (element) => {
-    let itsAttributes = Array.from(element.attributes);
-    renWorks.enumerate(itsAttributes, (attribute) => {
-      let name = attribute.name;
-      let value = attribute.nodeValue;
-      switch (name) {
-        case "div-centered-absolute":
-          let newStyle = document.createElement("style");
-          if (element.className === "") {
-            throw new Error(`The div ${element.outerHTML} needs a class name.`);
-          }
-          styleOneElement(
-            "position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);",
-            element.className,
-            newStyle,
-          );
-          break;
-        case "div-centered-flex":
-          if (element.className === "") {
-            throw new Error(`The div ${element.outerHTML} needs a class name.`);
-          }
-          styleOneElement(
-            `display: flex;
+  renWorks.enumerate(
+    allElements,
+    (element) => {
+      let itsAttributes = Array.from(element.attributes);
+      renWorks.enumerate(
+        itsAttributes,
+        (attribute) => {
+          let name = attribute.name;
+          let value = attribute.nodeValue;
+          switch (name) {
+            case "div-centered-absolute":
+              let newStyle = document.createElement("style");
+              if (element.className === "") {
+                throw new Error(
+                  `The div ${element.outerHTML} needs a class name.`,
+                );
+              }
+              styleOneElement(
+                "position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);",
+                element.className,
+                newStyle,
+              );
+              break;
+            case "div-centered-flex":
+              if (element.className === "") {
+                throw new Error(
+                  `The div ${element.outerHTML} needs a class name.`,
+                );
+              }
+              styleOneElement(
+                `display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;`,
-            element.className,
-            document.createElement("style"),
-          );
-          break;
-      }
-    });
-  });
+                element.className,
+                document.createElement("style"),
+              );
+              break;
+          }
+        },
+        true,
+      );
+    },
+    true,
+  );
 }
 styleDocument();
 export default renWorks;
