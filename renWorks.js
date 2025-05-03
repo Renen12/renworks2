@@ -191,22 +191,49 @@ export let renWorks = {
     });
     return array;
   },
+  // Tests if the supplied value is not valid, e.g null. If that is the case, it will run the fn() function that was supplied.
+  // Returns [v, successValue]
+  /**
+   *
+   * @param {any} v
+   * @param {Function} fn
+   * @returns {Array<any>}
+   */
+  test(v, fn) {
+    if (v === null || v === undefined || isNaN(v)) {
+      fn();
+      return [v, false];
+    }
+    return [v, true];
+  },
+  /**
+   *
+   * @param {string} msg
+   * @param {(accepted) => {}} fn
+   * @param {string|null} denyButtonDisplay
+   * @param {string|null} acceptButtonDisplay
+   */
+  // Alternative to the window.confirm() function.
+  confirm(msg, fn, acceptButtonDisplay, denyButtonDisplay) {
+    let dialogue = this.cnewa("dialog", {}, null);
+    let text = this.cnewa("h3", {}, msg);
+    let accept = this.cnewa("button", {}, acceptButtonDisplay || "Accept");
+    let deny = this.cnewa("button", {}, denyButtonDisplay || "Deny");
+    accept.onclick = () => {
+      fn(true);
+      return;
+    };
+    deny.onclick = () => {
+      fn(false);
+      return;
+    };
+    dialogue.appendChild(text);
+    dialogue.appendChild(accept);
+    dialogue.appendChild(deny);
+    document.body.appendChild(dialogue);
+    dialogue.showModal();
+  },
 };
-// Tests if the supplied value is not valid, e.g null. If that is the case, it will run the fn() function that was supplied.
-// Returns [v, successValue]
-/**
- *
- * @param {any} v
- * @param {Function} fn
- * @returns {Array<any>}
- */
-export function test(v, fn) {
-  if (v === null || v === undefined || isNaN(v)) {
-    fn();
-    return [v, false];
-  }
-  return [v, true];
-}
 function styleOneElement(style, className, newStyle) {
   let styleText = `.${className} {${style}}`;
   let duplicate = false;
