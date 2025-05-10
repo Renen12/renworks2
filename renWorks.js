@@ -245,6 +245,26 @@ export let renWorks = {
     document.body.appendChild(dialogue);
     dialogue.showModal();
   },
+  /**
+   *
+   * @param {string} X
+   * @param {string} string
+   * @returns {string}
+   */
+  ifFirstCharIsXRemoveX(X, string) {
+    let arr = Array.from(string);
+    if (arr[0] === X) {
+      arr.splice(0, 1);
+      let converted = String(arr);
+      let blank = "";
+      converted.split(",").forEach((x) => {
+        blank += x;
+      });
+      return blank;
+    } else {
+      return string;
+    }
+  },
 };
 function styleOneElement(style, className, newStyle) {
   let styleText = `.${className} {${style}}`;
