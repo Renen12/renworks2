@@ -265,6 +265,19 @@ export let renWorks = {
       return string;
     }
   },
+  /**
+   *
+   * @param {HTMLElement|Document} parent
+   */
+  removeChildrenFromParent(parent) {
+    renWorks.enumerate(
+      renWorks.qa(parent, "*"),
+      (v) => {
+        v.remove();
+      },
+      true,
+    );
+  },
 };
 function styleOneElement(style, className, newStyle) {
   let styleText = `.${className} {${style}}`;
