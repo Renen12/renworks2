@@ -14,6 +14,26 @@ export let renWorks = {
     return element;
   },
   /**
+   *
+   * @param {any} v
+   * @returns {{
+     unwrap() {
+
+     }
+   }}
+   */
+  // Rust-like
+  Result(v) {
+    return {
+      unwrap() {
+        if (v === null || v === undefined) {
+          throw new Error("Error during unwrapping: value is null or alike.");
+        }
+        return v;
+      },
+    };
+  },
+  /**
    * @param {string} selector
    * @returns {HTMLElement|null}
    */

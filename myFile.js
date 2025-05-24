@@ -1,4 +1,12 @@
+/**
+ *
+ * @param {string} string
+ * @returns {Array<String>}
+ */
+function splitString(string) {
+  return string.split(",");
+}
 import { renWorks } from "./renWorks.js";
-renWorks.confirm("Eat gravel?", (x) => {
-  alert(x);
-});
+let item = renWorks.Result("Hello, World!");
+let x = splitString(item.unwrap());
+console.log(x);
