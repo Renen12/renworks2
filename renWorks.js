@@ -195,6 +195,14 @@ export let renWorks = {
   },
   /**
    *
+   * @param {any[]} array
+   * @returns {any}
+   */
+  randItemFromArray(array) {
+    return array[Math.floor(Math.random() * array.length)];
+  },
+  /**
+   *
    * @param {string} string
    * @param {string} X
    * @returns {void}
