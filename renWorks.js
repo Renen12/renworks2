@@ -272,7 +272,7 @@ export let renWorks = {
   /**
    *
    * @param {string} type
-   * @param {string} attrib
+   * @param {Object} attrib
    * @param {string} text
    * @returns {HTMLElement}
    */
