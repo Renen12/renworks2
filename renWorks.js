@@ -1,3 +1,88 @@
+class localStorageItem {
+  /**
+   * 
+   * @param {string} localStorageKeyName 
+   */
+  constructor(localStorageKeyName) {
+    this.#rawValue = localStorage.getItem(localStorageKeyName);
+    this.#localStorageKeyName = localStorageKeyName;
+  }
+  #localStorageKeyName
+  #rawValue
+  /**
+   * @returns {localStorageArray}
+   */
+  asArray() {
+    return new localStorageArray(this.#localStorageKeyName);
+  }
+  /**
+   * 
+   * @returns {Result}
+   */
+  getValue() {
+    return renWorks.Result(this.#rawValue);
+  }
+  /**
+   * 
+   * @param {string} value 
+   */
+  setValue(value) {
+    this.#rawValue = value;
+    localStorage.setItem(this.#localStorageKeyName, value);
+  }
+}
+class localStorageArray {
+  /**
+   * 
+   * @param {string} localStorageKeyName 
+   */
+  constructor(localStorageKeyName) {
+    this.#localStorageExternalName = localStorageKeyName;
+    let existingData = localStorage.getItem(localStorageKeyName);
+    if (existingData !== null) {
+      try {
+        let array = JSON.parse(existingData);
+        this.#nonSynchronisedArray = array;
+      } catch (error) {
+        this.#nonSynchronisedArray = [];
+      }
+    }
+    else {
+      this.#nonSynchronisedArray = [];
+    }
+  }
+  #localStorageExternalName
+  /**
+   * @type {any[]}
+   */
+  #nonSynchronisedArray
+  /**
+   * 
+   * @param {number} index 
+   * @returns {Result}
+   */
+  // Directly modified values are not synchronised to localStorage
+  getUnsynchronisedValueFromArray(index) {
+    return renWorks.Result(this.#nonSynchronisedArray.at(index));
+  }
+  /**
+   * 
+   * @param {number} index 
+   * @param {any} value 
+   */
+  set(index, value) {
+    this.#nonSynchronisedArray[index] = value;
+    localStorage.setItem(this.#localStorageExternalName, JSON.stringify(this.#nonSynchronisedArray));
+  }
+  /**
+   * 
+   * @param {any} value 
+   */
+  push(value) {
+    this.#nonSynchronisedArray.push(value);
+    localStorage.setItem(this.#localStorageExternalName, JSON.stringify(this.#nonSynchronisedArray));
+  }
+}
 export let renWorks = {
   /**
    *
@@ -13,16 +98,17 @@ export let renWorks = {
     }
     return element;
   },
-  /**
-   *
-   * @param {any} v
-   * @returns {{
-     unwrap() {
-
-     }
-   }}
-   */
   // Rust-like
+  /**
+   * @typedef {{
+   *  unwrap(): {
+   *  
+   * }: any
+   * }} Result
+   * @param {any} v
+   * @returns {Result}
+   *
+   */
   Result(v) {
     return {
       unwrap() {
@@ -306,6 +392,16 @@ export let renWorks = {
       true,
     );
   },
+  localStorage: {
+    /**
+     * 
+     * @param {string} name 
+     * @returns {localStorageItem}
+     */
+    newItem(name) {
+      return new localStorageItem(name);
+    }
+  }
 };
 function styleOneElement(style, className, newStyle) {
   let styleText = `.${className} {${style}}`;
