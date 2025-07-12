@@ -380,6 +380,30 @@ export let renWorks = {
     }
   },
   /**
+   * Connects data to a function.\
+   * Set the data by accessing the data field of the return value.
+   * @example
+   * function render(value) {
+   renWorks.removeChildrenFromParent( renWorks.get(".main"))
+    renWorks.get(".main").appendChild(renWorks.cnewa("h1", {}, value));
+}
+let asyncItem = renWorks.connect(render);
+asyncItem.data = "Hello, World!";
+setTimeout(() => {
+    asyncItem.data = "Hello again, World!";
+}, 4000);
+
+   */
+  connect(subscriber) {
+    return new Proxy({data: ""}, {
+      set: (target,key, value)  => {
+        target[key] = value;
+        subscriber(value);
+        return true;
+      }
+    });
+  },
+  /**
    *
    * @param {HTMLElement|Document} parent
    */
